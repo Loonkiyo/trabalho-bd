@@ -1,0 +1,37 @@
+#CODE GERAL
+
+CREATE OR ALTER PROCEDURE Incluir_Pessoa
+    @Nome VARCHAR(50),
+    @Endereco VARCHAR(50),
+    @Cidade VARCHAR(40),
+    @Email NVARCHAR(40),
+    @Data_Nasc DATETIME
+AS
+BEGIN
+
+IF NOT EXISTS (SELECT 1 FROM Pessoa WHERE Email = @Email)
+
+    INSERT INTO Pessoa (Nome, Endereco, Cidade, Email, Data_Nasc)
+    VALUES (@Nome, @Endereco, @Cidade, @Email, @Data_Nasc)
+
+ELSE
+    PRINT 'Pessoa já cadastrada'
+
+END
+
+
+
+#ADICIONAR PESSOA
+
+EXEC Incluir_Pessoa
+    @Nome = 'João Silva',
+    @Endereco = 'Rua das Flores 123',
+    @Cidade = 'Sorocaba',
+    @Email = 'joao@email.com',
+    @Data_Nasc = '25/12/1995'
+
+
+
+#VER AS PESSOAS
+
+SELECT * FROM Pessoa
