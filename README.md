@@ -5,19 +5,19 @@ IF OBJECT_ID('Disciplina', 'U') IS NOT NULL DROP TABLE Disciplina;
 IF OBJECT_ID('Professor', 'U') IS NOT NULL DROP TABLE Professor;
 IF OBJECT_ID('Curso', 'U') IS NOT NULL DROP TABLE Curso;
 GO
- 
+
 CREATE TABLE Curso (
     codigo_curso INT PRIMARY KEY IDENTITY(1,1),
     nome_curso VARCHAR(100) NOT NULL,
     area_curso VARCHAR(50) NOT NULL
 );
- 
+
 CREATE TABLE Professor (
     codigo_professor INT PRIMARY KEY IDENTITY(1,1),
     nome_professor VARCHAR(100) NOT NULL,
     especialidade VARCHAR(50)
 );
- 
+
 CREATE TABLE Disciplina (
     codigo_disciplina INT PRIMARY KEY IDENTITY(1,1),
     nome_disciplina VARCHAR(100) NOT NULL,
@@ -27,7 +27,7 @@ CREATE TABLE Disciplina (
     FOREIGN KEY (codigo_curso) REFERENCES Curso(codigo_curso),
     FOREIGN KEY (codigo_professor) REFERENCES Professor(codigo_professor)
 );
- 
+
 CREATE TABLE Aluno (
     codigo_aluno INT PRIMARY KEY IDENTITY(1,1),
     nome_aluno VARCHAR(100) NOT NULL,
@@ -37,7 +37,7 @@ CREATE TABLE Aluno (
     codigo_curso INT NOT NULL,
     FOREIGN KEY (codigo_curso) REFERENCES Curso(codigo_curso)
 );
- 
+
 CREATE TABLE Nota (
     codigo_nota INT PRIMARY KEY IDENTITY(1,1),
     codigo_aluno INT NOT NULL,
@@ -47,7 +47,7 @@ CREATE TABLE Nota (
     FOREIGN KEY (codigo_aluno) REFERENCES Aluno(codigo_aluno),
     FOREIGN KEY (codigo_disciplina) REFERENCES Disciplina(codigo_disciplina)
 );
- 
+
 CREATE TABLE Falta (
     codigo_falta INT PRIMARY KEY IDENTITY(1,1),
     codigo_aluno INT NOT NULL,
@@ -58,14 +58,14 @@ CREATE TABLE Falta (
     FOREIGN KEY (codigo_disciplina) REFERENCES Disciplina(codigo_disciplina)
 );
 GO
- 
+
 INSERT INTO Curso (nome_curso, area_curso) VALUES
 ('Administração', 'Gestão'),
 ('Informática', 'Tecnologia'),
 ('Contabilidade', 'Gestão'),
 ('Desenvolvimento de Sistemas', 'Tecnologia');
 GO
- 
+
 INSERT INTO Professor (nome_professor, especialidade) VALUES
 ('Andrea', 'Gestão Empresarial'),
 ('Carlos', 'Programação'),
@@ -73,7 +73,7 @@ INSERT INTO Professor (nome_professor, especialidade) VALUES
 ('Roberto', 'Finanças'),
 ('Patricia', 'Marketing');
 GO
- 
+
 INSERT INTO Disciplina (nome_disciplina, codigo_curso, codigo_professor, carga_horaria) VALUES
 ('Gestão de Pessoas', 1, 1, 80),
 ('Matemática Financeira', 1, 4, 60),
@@ -84,7 +84,7 @@ INSERT INTO Disciplina (nome_disciplina, codigo_curso, codigo_professor, carga_h
 ('Algoritmos', 2, 2, 80),
 ('Contabilidade Geral', 3, 4, 70);
 GO
- 
+
 INSERT INTO Aluno (nome_aluno, endereco_aluno, cidade_aluno, telefone_aluno, codigo_curso) VALUES
 ('João Silva', 'Rua A, 123', 'Sorocaba', '(15) 9999-1111', 1),
 ('Maria Santos', 'Av B, 456', 'Sorocaba', '(15) 9999-2222', 2),
@@ -99,7 +99,7 @@ INSERT INTO Aluno (nome_aluno, endereco_aluno, cidade_aluno, telefone_aluno, cod
 ('André Oliveira', 'Rua K, 852', 'Sorocaba', '(15) 9999-1212', 2),
 ('Alice Santos', 'Av L, 963', 'Itu', '(15) 9999-2323', 1);
 GO
- 
+
 INSERT INTO Nota (codigo_aluno, codigo_disciplina, nota, data_avaliacao) VALUES
 (1, 1, 'MB', '15/01/2024'),
 (1, 2, 'B', '20/01/2024'),
@@ -122,7 +122,7 @@ INSERT INTO Nota (codigo_aluno, codigo_disciplina, nota, data_avaliacao) VALUES
 (6, 7, 'MB', '04/02/2024'),
 (8, 5, 'I', '05/02/2024');
 GO
- 
+
 INSERT INTO Falta (codigo_aluno, codigo_disciplina, data_falta, quantidade_faltas) VALUES
 (1, 1, '10/01/2024', 2),
 (1, 2, '12/01/2024', 1),
@@ -143,59 +143,59 @@ INSERT INTO Falta (codigo_aluno, codigo_disciplina, data_falta, quantidade_falta
 (3, 1, '25/01/2024', 1),
 (2, 4, '28/01/2024', 2);
 GO
- 
+
 SELECT * FROM Aluno;
 GO
- 
+
 SELECT * FROM Curso;
 GO
- 
+
 SELECT * FROM Aluno WHERE cidade_aluno = 'Sorocaba';
 GO
- 
+
 SELECT d.* 
 FROM Disciplina d
 INNER JOIN Curso c ON d.codigo_curso = c.codigo_curso
 WHERE c.nome_curso = 'Administração';
 GO
- 
+
 SELECT d.* 
 FROM Disciplina d
 INNER JOIN Curso c ON d.codigo_curso = c.codigo_curso
 WHERE c.nome_curso = 'Informática';
 GO
- 
+
 SELECT d.* 
 FROM Disciplina d
 INNER JOIN Professor p ON d.codigo_professor = p.codigo_professor
 WHERE p.nome_professor = 'Andrea';
 GO
- 
+
 SELECT n.codigo_disciplina, d.nome_disciplina, n.nota, n.data_avaliacao
 FROM Nota n
 INNER JOIN Disciplina d ON n.codigo_disciplina = d.codigo_disciplina
 WHERE n.codigo_aluno = 10;
- 
+
 SELECT f.codigo_disciplina, d.nome_disciplina, f.data_falta, f.quantidade_faltas
 FROM Falta f
 INNER JOIN Disciplina d ON f.codigo_disciplina = d.codigo_disciplina
 WHERE f.codigo_aluno = 10;
 GO
- 
+
 SELECT AVG(f.quantidade_faltas * 1.0) as media_faltas
 FROM Falta f
 INNER JOIN Disciplina d ON f.codigo_disciplina = d.codigo_disciplina
 INNER JOIN Curso c ON d.codigo_curso = c.codigo_curso
 WHERE c.nome_curso = 'Informática';
 GO
- 
+
 SELECT SUM(f.quantidade_faltas) as total_faltas
 FROM Falta f
 INNER JOIN Disciplina d ON f.codigo_disciplina = d.codigo_disciplina
 INNER JOIN Curso c ON d.codigo_curso = c.codigo_curso
 WHERE c.nome_curso = 'Administração';
 GO
- 
+
 SELECT 
     d.codigo_disciplina,
     d.nome_disciplina,
@@ -205,12 +205,12 @@ LEFT JOIN Nota n ON d.codigo_disciplina = n.codigo_disciplina AND n.nota = 'MB'
 GROUP BY d.codigo_disciplina, d.nome_disciplina
 ORDER BY quantidade_MB DESC;
 GO
- 
+
 SELECT SUM(quantidade_faltas) as total_faltas_aluno_3
 FROM Falta 
 WHERE codigo_aluno = 3;
 GO
- 
+
 SELECT 
     c.nome_curso,
     COUNT(n.nota) as quantidade_MB
@@ -220,7 +220,7 @@ INNER JOIN Curso c ON d.codigo_curso = c.codigo_curso
 WHERE c.nome_curso = 'Informática' AND n.nota = 'MB'
 GROUP BY c.nome_curso;
 GO
- 
+
 SELECT 
     c.nome_curso as turma,
     n.nota,
@@ -232,19 +232,19 @@ WHERE n.nota IN ('MB', 'B', 'R', 'I')
 GROUP BY c.nome_curso, n.nota
 ORDER BY c.nome_curso, n.nota;
 GO
- 
+
 SELECT a.codigo_aluno, a.nome_aluno, c.nome_curso
 FROM Aluno a
 INNER JOIN Curso c ON a.codigo_curso = c.codigo_curso
 WHERE c.nome_curso IN ('Informática', 'Administração')
 ORDER BY c.nome_curso, a.nome_aluno;
 GO
- 
+
 SELECT *
 FROM Disciplina
 WHERE nome_disciplina LIKE '%o%' OR nome_disciplina LIKE '%O%';
 GO
- 
+
 SELECT *
 FROM Aluno
 WHERE nome_aluno LIKE 'A%';
